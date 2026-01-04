@@ -6,8 +6,7 @@ import slugify from "slugify";
 const createPost = async (req: Request, res: Response): Promise<void> => {
     try {
         const { title, content, published } = req.body;
-        const userId = (req as any).user.id;
-
+        const userId = (req as any).user?.id;
         if (!title || !content) {
             res.status(400).json({ message: "Title and content are required" });
             return;

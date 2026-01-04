@@ -2,48 +2,55 @@ import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/databaseConfig";
 
 class User extends Model {
-    public id!: number;
-    public email!: string;
-    public username!: string;
-    public password!: string;
+  public id!: number;
+  public email!: string;
+  public username!: string;
+  public password!: string;
 }
 
-
-User.init({
+User.init(
+  {
     id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
     },
     email: {
-        type: DataTypes.STRING,
-        unique: true,
-        allowNull: false,
-        validate: {
-            isEmail: true
-        }
+      type: DataTypes.STRING(200),
+      allowNull: false,
+      validate: {
+        isEmail: true,
+      },
     },
     username: {
-        type: DataTypes.STRING,
-        unique: true,
-        allowNull: false
-    }, password: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-            len: {
-                args: [8, 64], // min 8, max 64 characters
-                msg: "Password must be between 8 and 64 characters",
-            },
-        },
+      type: DataTypes.STRING(200),
+      allowNull: false,
     },
+    password: {
+      type: DataTypes.STRING(200),
+      allowNull: false,
+      validate: {
+        len: [8, 64],
+      },
+    },
+  },
+  {
+    sequelize,
+    tableName: "users",
+    timestamps: true,
 
-},
-    {
-        sequelize,
-        tableName: "users",
-        timestamps: true
-    }
-)
+    // ✅ Explicit indexes (this prevents duplication)
+    indexes: [
+      {
+        // unique: true,
+        fields: ["email"],
+      },
+      {
+        // unique: true,
+        fields: ["username"],
+      },
+    ],
+  }
+);
 
 export default User;
