@@ -6,50 +6,39 @@ class User extends Model {
   public email!: string;
   public username!: string;
   public password!: string;
+
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
 }
 
 User.init(
   {
     id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.INTEGER.UNSIGNED,
       autoIncrement: true,
       primaryKey: true,
     },
     email: {
       type: DataTypes.STRING(200),
       allowNull: false,
-      validate: {
-        isEmail: true,
-      },
+      validate: { isEmail: true },
+      unique: true,
     },
     username: {
       type: DataTypes.STRING(200),
       allowNull: false,
+      unique: true,
     },
     password: {
       type: DataTypes.STRING(200),
       allowNull: false,
-      validate: {
-        len: [8, 64],
-      },
     },
   },
   {
     sequelize,
     tableName: "users",
     timestamps: true,
-
-    // ✅ Explicit indexes (this prevents duplication)
-    indexes: [
-      {
-        // unique: true,
-        fields: ["email"],
-      },
-      {
-        // unique: true,
-        fields: ["username"],
-      },
-    ],
+    underscored: true,
   }
 );
 
